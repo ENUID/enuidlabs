@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-white text-black;
+    font-family: 'Michroma', sans-serif;
+  }
+  
+  * {
+    @apply transition-colors duration-300;
+    font-family: 'Michroma', sans-serif;
+  }
+}
+
+@layer utilities {
+  .smooth-transition {
+    @apply transition-all duration-500 ease-out;
+  }
+  
+  .hover-lift {
+    @apply hover:-translate-y-1 hover:shadow-lg transition-all duration-300;
+  }
+  
+  .typing-effect {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid transparent;
+    animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+  }
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #22c55e }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d1d5db;
+}
+
+html {
+  scroll-behavior: smooth;
+}
