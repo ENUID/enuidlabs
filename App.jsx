@@ -6,9 +6,9 @@ import { Link } from 'react-router-dom';
 // --- Components ---
 
 const Logo = () => (
-  <div className="absolute top-4 left-8 z-50 flex items-center gap-3">
-    <img src="/logo_2-.png" alt="ENUID Logo" className="h-24 w-auto object-contain" />
-    <span className="text-2xl font-normal tracking-widest text-white" style={{ fontFamily: 'Michroma, sans-serif' }}>ENUID</span>
+  <div className="absolute top-4 left-4 md:left-8 z-50 flex items-center gap-2 md:gap-3">
+    <img src="/logo_2-.png" alt="ENUID Logo" className="h-16 md:h-20 lg:h-24 w-auto object-contain" />
+    <span className="text-lg md:text-xl lg:text-2xl font-normal tracking-widest text-white" style={{ fontFamily: 'Michroma, sans-serif' }}>ENUID</span>
   </div>
 );
 
@@ -141,36 +141,36 @@ const WishlistModal = ({ isOpen, onClose, onEmailAdded, initialEmail = '' }) => 
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               className="relative w-full max-w-lg pointer-events-auto"
             >
-              <div className="bg-white p-12 md:p-16 shadow-2xl border border-gray-100 relative">
+              <div className="bg-white p-8 md:p-12 lg:p-16 shadow-2xl border border-gray-100 relative">
                 <button
                   onClick={onClose}
-                  className="absolute top-6 right-6 p-2 hover:bg-gray-100 transition-colors rounded-full"
+                  className="absolute top-4 right-4 md:top-6 md:right-6 p-2 hover:bg-gray-100 transition-colors rounded-full"
                   aria-label="Close"
                 >
-                  <X className="w-5 h-5 text-black" />
+                  <X className="w-4 h-4 md:w-5 md:h-5 text-black" />
                 </button>
 
                 {!isSubmitted ? (
                   <>
-                    <h3 className="text-2xl font-bold text-black mb-6 tracking-tight">
+                    <h3 className="text-xl md:text-2xl font-bold text-black mb-4 md:mb-6 tracking-tight">
                       Join waitlist
                     </h3>
-                    <p className="text-gray-500 mb-10 text-sm font-light leading-relaxed">
+                    <p className="text-gray-500 mb-8 md:mb-10 text-xs md:text-sm font-light leading-relaxed">
                       Fluid Orbit is currently in private beta. Enter your email to get early access.
                     </p>
 
-                    <form onSubmit={handleSubmit} className="space-y-8">
+                    <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
                       <div className="relative">
                         <input
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="Email address"
-                          className="w-full pb-4 bg-transparent border-b border-gray-200 text-black placeholder:text-gray-300 focus:outline-none focus:border-black transition-colors text-base"
+                          className="w-full pb-3 md:pb-4 bg-transparent border-b border-gray-200 text-black placeholder:text-gray-300 focus:outline-none focus:border-black transition-colors text-sm md:text-base"
                           disabled={isLoading}
                         />
                         {error && (
-                          <p className="absolute top-full left-0 text-red-500 text-xs mt-2 pb-4">
+                          <p className="absolute top-full left-0 text-red-500 text-[10px] md:text-xs mt-2 pb-4">
                             {error}
                           </p>
                         )}
@@ -179,17 +179,17 @@ const WishlistModal = ({ isOpen, onClose, onEmailAdded, initialEmail = '' }) => 
                       <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full py-2 bg-black text-white font-bold hover:bg-gray-900 transition-colors flex items-center justify-center text-sm"
+                        className="w-full py-3 md:py-4 bg-black text-white font-bold hover:bg-gray-900 transition-colors flex items-center justify-center text-xs md:text-sm"
                       >
                         {isLoading ? 'Processing...' : 'Request Access'}
                       </button>
                     </form>
                   </>
                 ) : (
-                  <div className="text-center py-12">
-                    <Check className="w-8 h-8 text-black mx-auto mb-6" />
-                    <h3 className="text-xl font-bold text-black mb-4">You're on the list.</h3>
-                    <p className="text-gray-500 text-sm">We'll be in touch soon.</p>
+                  <div className="text-center py-8 md:py-12">
+                    <Check className="w-6 h-6 md:w-8 md:h-8 text-black mx-auto mb-4 md:mb-6" />
+                    <h3 className="text-lg md:text-xl font-bold text-black mb-3 md:mb-4">You're on the list.</h3>
+                    <p className="text-gray-500 text-xs md:text-sm">We'll be in touch soon.</p>
                   </div>
                 )}
               </div>
@@ -264,38 +264,38 @@ const EnuidLab = () => {
       <Logo />
 
       {/* Navigation */}
-      <nav className="absolute top-8 right-8 z-50 px-8 py-3 rounded-lg bg-white/100 border border-white/20">
-        <div className="flex gap-8 text-xs font-light tracking-wide uppercase">
+      <nav className="absolute top-6 md:top-8 right-4 md:right-8 z-50 px-4 md:px-6 lg:px-8 py-2 md:py-3 rounded-lg bg-white/100 border border-white/20">
+        <div className="flex gap-3 md:gap-6 lg:gap-8 text-[10px] md:text-xs font-light tracking-wide uppercase">
           <a href="#lab" className="transition-colors text-black/100 hover:text-black/70">Lab</a>
-          <a href="#fluid" className="transition-colors text-black/100 hover:text-black/70">Fluid Orbit</a>
-          <a href="#experiments" className="transition-colors text-black/100 hover:text-black/70">Experiments</a>
-          <Link to="/blogs" className="transition-colors text-black/100 hover:text-black/70">Journals</Link>
+          <a href="#fluid" className="transition-colors text-black/100 hover:text-black/70">Fluid</a>
+          <a href="#experiments" className="transition-colors text-black/100 hover:text-black/70 hidden sm:inline">Experiments</a>
+          <Link to="/blogs" className="transition-colors text-black/100 hover:text-black/70">Journal</Link>
         </div>
       </nav>
 
     
       {/* 1. Hero / Concept Section */}
-      <section className="relative h-screen w-full overflow-hidden pt-32 pb-10 flex flex-col z-10">
-        <div className="w-full flex-grow flex items-center relative px-8 lg:px-16">
+      <section className="relative min-h-screen w-full overflow-hidden pt-24 md:pt-32 pb-10 flex flex-col z-10">
+        <div className="w-full flex-grow flex items-center relative px-4 md:px-8 lg:px-16">
           
           <div className="flex flex-col items-start max-w-2xl z-10 relative">
             
             {/* Central Glowing Element Removed */}
 
-            <div className="space-y-8 pt-20">
-              <div className="flex items-center gap-4 mb-6">
+            <div className="space-y-6 md:space-y-8 pt-12 md:pt-20">
+              <div className="flex items-center gap-4 mb-4 md:mb-6">
                
-                <h1 className="text-xl lg:text-3xl tracking-tight text-white leading-tight" style={{ fontWeight: 400 }}>
+                <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-tight text-white leading-tight" style={{ fontWeight: 400 }}>
                   Everything starts<br/>with an understanding.
                 </h1>
               </div>
               
-              <p className="text-base text-white/80 max-w-2xl">
+              <p className="text-sm md:text-base text-white/80 max-w-2xl leading-relaxed">
                ENUID is an independent lab for studying and building intelligence carefully. We question it, break it, rebuild it, and keep going until it is actually useful for people in the real world.
               </p>
 
-              <div className="flex flex-col sm:flex-row items-start gap-6 pt-4">
-                <a href="#fluid" className="px-4 py-2 rounded-lg transition-all bg-white text-black border border-white hover:bg-gray-100 flex items-center justify-center gap-2 font-medium text-lg">
+              <div className="flex flex-col sm:flex-row items-start gap-4 md:gap-6 pt-4">
+                <a href="#fluid" className="px-6 py-3 rounded-lg transition-all bg-white text-black border border-white hover:bg-gray-100 flex items-center justify-center gap-2 font-medium text-sm md:text-base w-full sm:w-auto">
                    Fluid Orbit <ArrowRight className="w-3 h-3" />
                 </a>
               </div>
@@ -312,25 +312,22 @@ const EnuidLab = () => {
       </div>
 
       {/* 2. About The Lab */}
-      <section id="lab" className="relative z-10 py-32 px-6 lg:px-20 bg-white">
-        <div className="px-12 lg:px-24 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+      <section id="lab" className="relative z-10 py-16 md:py-24 lg:py-32 px-4 md:px-6 lg:px-20 bg-white">
+        <div className="px-4 md:px-8 lg:px-24 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-start">
             {/* Left Column - Text Content */}
-            <div className="flex flex-col gap-12">
+            <div className="flex flex-col gap-8 md:gap-12">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
-                <h2 className="text-2xl font-700 text-black mb-6">The Lab: Build for people.</h2>
-                <div className="w-12 h-0.5 bg-black rounded-full mb-8" />
-                {/* <p className="text-3xl font-light text-black leading-tight border-l-4 border-black pl-8">
-                  .. build for people.
-                </p> */}
+                <h2 className="text-xl md:text-2xl font-700 text-black mb-4 md:mb-6">The Lab: Build for people.</h2>
+                <div className="w-12 h-0.5 bg-black rounded-full mb-6 md:mb-8" />
               </motion.div>
               <div className="relative max-w-2xl">
-                <div className="space-y-8 text-gray-600 text-base leading-relaxed font-light">
+                <div className="space-y-6 md:space-y-8 text-gray-600 text-sm md:text-base leading-relaxed font-light">
                   <p>
                     We treat intelligence as something to study, not just a feature to ship. That means sitting with hard problems, running experiments that might fail, and taking the time to understand what we are building before we scale it.
                   </p>
@@ -345,16 +342,16 @@ const EnuidLab = () => {
             </div>
 
             {/* Right Column - Video (Vertical Alignment) */}
-            <div className="flex justify-center lg:justify-end items-center h-full">
+            <div className="flex justify-center lg:justify-end items-center h-full mt-8 lg:mt-0">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
-                className="relative"
+                className="relative w-full max-w-md"
               >
                 <video
-                  className=" object-cover rounded-lg shadow-xl"
+                  className="w-full h-auto object-cover rounded-lg shadow-xl"
                   autoPlay 
                   loop
                   muted
@@ -377,14 +374,14 @@ const EnuidLab = () => {
       </div>
 
       {/* 3. How We Build */}
-      <section className="relative z-10 py-32 px-6 lg:px-20 bg-white">
-        <div className="px-12 lg:px-24 max-w-7xl mx-auto">
-          <div className="mb-24">
-            <h2 className="text-2xl md:text-2xl font-700 text-black mb-6">How we build</h2>
+      <section className="relative z-10 py-16 md:py-24 lg:py-32 px-4 md:px-6 lg:px-20 bg-white">
+        <div className="px-4 md:px-8 lg:px-24 max-w-7xl mx-auto">
+          <div className="mb-12 md:mb-16 lg:mb-24">
+            <h2 className="text-xl md:text-2xl font-700 text-black mb-4 md:mb-6">How we build</h2>
             <div className="w-12 h-0.5 bg-black rounded-full" />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12">
             {principles.map((item, i) => (
               <motion.div 
                 key={i} 
@@ -395,10 +392,10 @@ const EnuidLab = () => {
                 className="flex flex-col justify-between group"
               >
                 <div>
-                  <div className="text-3xl font-bold text-gray-100 mb-6 group-hover:text-gray-200 transition-colors">0{i+1}</div>
-                  <h3 className="text-xl font-700 text-black mb-4">{item.title}</h3>
+                  <div className="text-2xl md:text-3xl font-bold text-gray-100 mb-4 md:mb-6 group-hover:text-gray-200 transition-colors">0{i+1}</div>
+                  <h3 className="text-lg md:text-xl font-700 text-black mb-3 md:mb-4">{item.title}</h3>
                 </div>
-                <p className="text-sm text-gray-500 leading-relaxed">{item.text}</p>
+                <p className="text-xs md:text-sm text-gray-500 leading-relaxed">{item.text}</p>
               </motion.div>
             ))}
           </div>
@@ -413,14 +410,14 @@ const EnuidLab = () => {
       </div>
 
       {/* 4. Fluid Orbit */}
-      <section id="fluid" className="relative min-h-screen w-full py-32 flex flex-col justify-center bg-black text-white">
-        <div className="px-12 lg:px-24 max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+      <section id="fluid" className="relative min-h-screen w-full py-16 md:py-24 lg:py-32 flex flex-col justify-center bg-black text-white">
+        <div className="px-4 md:px-8 lg:px-24 max-w-7xl mx-auto relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 lg:gap-24 items-center">
              {/* Left Column - Text Content */}
              <div>
-                <div className="flex items-center gap-3 mb-8">
+                <div className="flex items-center gap-2 md:gap-3 mb-6 md:mb-8">
                    <video
-                     className="w-14 h-14 object-cover rounded"
+                     className="w-10 h-10 md:w-14 md:h-14 object-cover rounded"
                      autoPlay
                      loop
                      muted
@@ -428,11 +425,11 @@ const EnuidLab = () => {
                    >
                      <source src="/tick.MP4" type="video/mp4" />
                    </video>
-                   <span className="font-mono text-gray-300 text-sm uppercase tracking-widest">The Shopping OS</span>
+                   <span className="font-mono text-gray-300 text-xs md:text-sm uppercase tracking-widest">The Shopping OS</span>
                 </div>
-                <h2 className="text-2xl lg:text-3xl font-700 text-white mb-10 tracking-tight">Fluid Orbit</h2>
+                <h2 className="text-xl md:text-2xl lg:text-3xl font-700 text-white mb-6 md:mb-8 lg:mb-10 tracking-tight">Fluid Orbit</h2>
                 
-                <div className="space-y-8 text-base text-gray-400 mb-12 font-light leading-relaxed">
+                <div className="space-y-4 md:space-y-6 lg:space-y-8 text-sm md:text-base text-gray-400 mb-8 md:mb-10 lg:mb-12 font-light leading-relaxed">
                   <p>
                     Fluid Orbit is not a marketplace. It is not a store. It does not run ads. It does not take money from sponsors. It does not push affiliate links.
                   </p>
@@ -445,8 +442,8 @@ const EnuidLab = () => {
                 </div>
 
                 {/* New Wishlist Design */}
-                <div className="space-y-6">
-                  <p className="text-sm text-gray-300 font-light">
+                <div className="space-y-4 md:space-y-6">
+                  <p className="text-xs md:text-sm text-gray-300 font-light">
                     If that sounds like something you'd want, hop on the wishlist.
                   </p>
                   
@@ -504,20 +501,20 @@ const EnuidLab = () => {
                       setIsSubmitting(false);
                       setMainCountdown(0);
                     }
-                  }} className="flex flex-col sm:flex-row gap-4">
+                  }} className="flex flex-col sm:flex-row gap-3 md:gap-4">
                     <input
                       type="email"
                       value={mainEmail}
                       onChange={(e) => setMainEmail(e.target.value)}
                       placeholder="Enter your Email"
-                      className="flex-1 px-6 py-4 bg-white text-black placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 text-base"
+                      className="flex-1 px-4 md:px-6 py-3 md:py-4 bg-white text-black placeholder:text-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 text-sm md:text-base"
                       required
                       disabled={isSubmitting}
                     />
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className={`px-8 py-4 rounded-lg transition-all flex items-center justify-center gap-2 text-base font-medium whitespace-nowrap disabled:cursor-not-allowed ${
+                      className={`px-6 md:px-8 py-3 md:py-4 rounded-lg transition-all flex items-center justify-center gap-2 text-sm md:text-base font-medium whitespace-nowrap disabled:cursor-not-allowed ${
                         hasJoined 
                           ? 'bg-white text-black border border-white-500' 
                           : 'bg-gray-600 text-black hover:bg-gray-400 disabled:opacity-50'
@@ -528,28 +525,28 @@ const EnuidLab = () => {
                   </form>
                   
                   {submitMessage && (
-                    <p className={`text-sm ${submitMessage.includes('already') || submitMessage.includes('wrong') || submitMessage.includes('connect') ? 'text-red-400' : 'text-green-400'}`}>
+                    <p className={`text-xs md:text-sm ${submitMessage.includes('already') || submitMessage.includes('wrong') || submitMessage.includes('connect') ? 'text-red-400' : 'text-green-400'}`}>
                       {submitMessage}
                     </p>
                   )}
                   
-                  <p className="text-sm text-gray-500">
+                  <p className="text-xs md:text-sm text-gray-500">
                     {emailCount} people joined the wishlist
                   </p>
                 </div>
              </div>
 
              {/* Right Column - Fluid Orbit Video */}
-             <div className="flex justify-center lg:justify-end items-center h-full">
+             <div className="flex justify-center lg:justify-end items-center h-full mt-8 lg:mt-0">
                <motion.div
                  initial={{ opacity: 0, scale: 0.95 }}
                  whileInView={{ opacity: 1, scale: 1 }}
                  viewport={{ once: true }}
                  transition={{ duration: 0.8 }}
-                 className="relative"
+                 className="relative w-full max-w-md"
                >
                  <video
-                   className="w-full max-w-md h-auto object-cover rounded-lg shadow-xl"
+                   className="w-full h-auto object-cover rounded-lg shadow-xl"
                    autoPlay
                    loop
                    muted
@@ -573,18 +570,18 @@ const EnuidLab = () => {
       </div>
 
       {/* 5. Experiments */}
-      <section id="experiments" className="relative min-h-screen w-full py-32 bg-white">
+      <section id="experiments" className="relative min-h-screen w-full py-16 md:py-24 lg:py-32 bg-white">
         
-        <div className="px-12 lg:px-24 max-w-7xl mx-auto">
-          <div className="mb-24">
-             <h2 className="text-2xl font-700 mb-6">Experiments</h2>
-             <div className="w-12 h-0.5 bg-black rounded-full mb-6" />
-             <p className="text-gray-500 max-w-3xl text-base leading-relaxed">
+        <div className="px-4 md:px-8 lg:px-24 max-w-7xl mx-auto">
+          <div className="mb-12 md:mb-16 lg:mb-24">
+             <h2 className="text-xl md:text-2xl font-700 mb-4 md:mb-6">Experiments</h2>
+             <div className="w-12 h-0.5 bg-black rounded-full mb-4 md:mb-6" />
+             <p className="text-gray-500 max-w-3xl text-sm md:text-base leading-relaxed">
               Everything we build for Fluid Orbit starts as an experiment. Some are small ideas that turn into real features. Others are deeper investigations into how people search, compare, and trust products. All of them move Fluid Orbit closer to becoming the Shopping OS.
              </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
             {experiments.map((exp, i) => (
               <motion.div 
                 key={i} 
@@ -592,18 +589,18 @@ const EnuidLab = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group min-h-[260px] flex flex-col p-8 border border-gray-100 hover:border-black transition-colors bg-white"
+                className="group min-h-[220px] md:min-h-[260px] flex flex-col p-6 md:p-8 border border-gray-100 hover:border-black transition-colors bg-white"
               >
-                <div className="flex justify-between items-start mb-6">
-                  <span className="font-mono text-xs text-gray-400">EXP-{exp.id}</span>
-                  <span className="text-[10px] uppercase tracking-wider px-3 py-1 rounded-full border border-gray-200 font-medium">
+                <div className="flex justify-between items-start mb-4 md:mb-6">
+                  <span className="font-mono text-[10px] md:text-xs text-gray-400">EXP-{exp.id}</span>
+                  <span className="text-[9px] md:text-[10px] uppercase tracking-wider px-2 md:px-3 py-1 rounded-full border border-gray-200 font-medium">
                     {exp.status}
                   </span>
                 </div>
-                <h3 className="text-base font-700 text-black mb-4 leading-tight">
+                <h3 className="text-sm md:text-base font-700 text-black mb-3 md:mb-4 leading-tight">
                   {exp.title}
                 </h3>
-                <p className="text-xs text-gray-500 leading-relaxed">{exp.desc}</p>
+                <p className="text-[11px] md:text-xs text-gray-500 leading-relaxed">{exp.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -611,35 +608,35 @@ const EnuidLab = () => {
       </section>
 
       {/* Footer */}
-      <footer className="relative py-20 bg-black">
-        <div className="px-12 lg:px-24 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-8 mb-8">
+      <footer className="relative py-12 md:py-16 lg:py-20 bg-black">
+        <div className="px-4 md:px-8 lg:px-24 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-6 md:gap-8 mb-6 md:mb-8">
             {/* Left: ENUID LABS */}
-            <div className="flex flex-col gap-2 justify-self-start">
-               <div className="text-xs font-bold tracking-widest uppercase text-white">ENUID LABS</div>
-               <div className="text-xs text-gray-500">Build for people</div>
+            <div className="flex flex-col gap-2 justify-self-start text-center md:text-left">
+               <div className="text-[10px] md:text-xs font-bold tracking-widest uppercase text-white">ENUID LABS</div>
+               <div className="text-[10px] md:text-xs text-gray-500">Build for people</div>
             </div>
             
             {/* Center: Upward Arrow */}
-            <div className="flex justify-center">
+            <div className="flex justify-center order-first md:order-none">
               <button 
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 className="p-2 text-gray-400 hover:text-white transition-colors rounded-full hover:bg-white-200"
               >
-                <ChevronUp className="w-6 h-6 hover:text-white" />
+                <ChevronUp className="w-5 h-5 md:w-6 md:h-6 hover:text-white" />
               </button>
             </div>
             
             {/* Right: Contact & Privacy */}
-            <div className="flex gap-8 text-xs text-gray-400 font-bold uppercase tracking-wider justify-self-end">
+            <div className="flex gap-6 md:gap-8 text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-wider justify-self-center md:justify-self-end">
               <a href="#" className="hover:text-white transition-colors">Contact</a>
               <a href="#" className="hover:text-white transition-colors">Privacy</a>
             </div>
           </div>
           
           {/* Copyright */}
-          <div className="text-start pt-8 border-t border-gray-800">
-            <p className="text-sm text-gray-500">
+          <div className="text-center md:text-start pt-6 md:pt-8 border-t border-gray-800">
+            <p className="text-xs md:text-sm text-gray-500">
              © {new Date().getFullYear()}  ENUID. All rights Reserved.
             </p>
           </div>
