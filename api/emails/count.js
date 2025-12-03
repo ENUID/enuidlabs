@@ -1,11 +1,18 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { google } from 'googleapis';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const getGoogleSheetsClient = () => {
+  const auth = new google.auth.GoogleAuth({
+    credentials: {
+      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    },
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+  });
 
-export default function handler(req, res) {
+  return google.sheets({ version: 'v4', auth });
+};
+
+export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -17,33 +24,21 @@ export default function handler(req, res) {
 
   if (req.method === 'GET') {
     try {
-      // Try multiple possible paths for the wishlist file
-      const possiblePaths = [
-        path.join(__dirname, 'wishlist-emails.json'),
-        path.join(__dirname, '..', 'wishlist-emails.json'),
-        path.join(__dirname, '..', '..', 'wishlist-emails.json'),
-        path.join(process.cwd(), 'wishlist-emails.json'),
-        path.join(process.cwd(), 'api', 'emails', 'wishlist-emails.json'),
-      ];
+      const sheets = getGoogleSheetsClient();
+      const spreadsheetId = process.env.GOOGLE_SHEET_ID;
 
-      let emails = [];
-
-      for (const filePath of possiblePaths) {
-        try {
-          if (fs.existsSync(filePath)) {
-            const fileContent = fs.readFileSync(filePath, 'utf-8');
-            emails = JSON.parse(fileContent);
-            console.log(`✅ Found wishlist at: ${filePath} with ${emails.length} emails`);
-            break;
-          }
-        } catch (err) {
-          console.log(`Failed to read ${filePath}`);
-        }
-      }
-
-      return res.status(200).json({ 
-        count: emails.length
+      // Get all emails from the sheet
+      const response = await sheets.spreadsheets.values.get({
+        spreadsheetId,
+        range: 'Sheet1!A:A',
       });
+
+      const emails = response.data.values || [];
+      const count = emails.length;
+
+      console.log(`Current wishlist count: ${count}`);
+
+      return res.status(200).json({ count });
     } catch (error) {
       console.error('Error getting count:', error);
       return res.status(500).json({ 
