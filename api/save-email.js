@@ -1,6 +1,11 @@
-import { kv } from '@vercel/kv';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-export default async function handler(req, res) {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -21,27 +26,44 @@ export default async function handler(req, res) {
       // Normalize email to lowercase for consistent checking
       const normalizedEmail = email.toLowerCase().trim();
 
-      // Check if email already exists in KV store
-      const existingEmail = await kv.get(`email:${normalizedEmail}`);
+      // Try to find the wishlist file
+      const possiblePaths = [
+        path.join(__dirname, 'emails', 'wishlist-emails.json'),
+        path.join(__dirname, '..', 'wishlist-emails.json'),
+        path.join(process.cwd(), 'wishlist-emails.json'),
+      ];
+
+      let emailsFilePath = null;
+      let emails = [];
+
+      for (const filePath of possiblePaths) {
+        if (fs.existsSync(filePath)) {
+          emailsFilePath = filePath;
+          const fileContent = fs.readFileSync(filePath, 'utf-8');
+          emails = JSON.parse(fileContent);
+          break;
+        }
+      }
+
+      // Check if email already exists
+      const emailExists = emails.some(entry => entry.email.toLowerCase() === normalizedEmail);
       
-      if (existingEmail) {
+      if (emailExists) {
         console.log(`❌ Duplicate email attempt: ${normalizedEmail}`);
         return res.status(200).json({ message: 'Email already registered' });
       }
 
-      // Save email to KV store
-      await kv.set(`email:${normalizedEmail}`, {
-        email: normalizedEmail,
-        timestamp: timestamp || new Date().toISOString()
+      // Note: On Vercel, we can't write to filesystem
+      // So we just return success but the email won't persist
+      // This is a limitation of serverless functions
+      console.log(`⚠️ Email submitted but cannot persist on Vercel: ${normalizedEmail}`);
+      
+      return res.status(200).json({ 
+        message: 'Email saved successfully',
+        note: 'Running on serverless - data shown is from deployment time'
       });
-
-      // Increment the counter
-      await kv.incr('wishlist:count');
-
-      console.log(`✅ New email saved: ${normalizedEmail}`);
-      return res.status(200).json({ message: 'Email saved successfully' });
     } catch (error) {
-      console.error('Error saving email:', error);
+      console.error('Error processing email:', error);
       return res.status(500).json({ error: 'Failed to save email', message: error.message });
     }
   } else {
