@@ -19,33 +19,34 @@ export default function handler(req, res) {
     try {
       // Try multiple possible paths for the wishlist file
       const possiblePaths = [
-        path.join(__dirname, '..', '..', 'wishlist-emails.json'),
+        path.join(__dirname, 'wishlist-emails.json'), // Same directory as the function
+        path.join(__dirname, '..', 'wishlist-emails.json'), // Parent api directory
+        path.join(__dirname, '..', '..', 'wishlist-emails.json'), // Root directory
         path.join(process.cwd(), 'wishlist-emails.json'),
-        path.join(__dirname, 'wishlist-emails.json'),
+        path.join(process.cwd(), 'api', 'emails', 'wishlist-emails.json'),
       ];
 
       let emails = [];
       let foundPath = null;
 
       for (const filePath of possiblePaths) {
-        if (fs.existsSync(filePath)) {
-          foundPath = filePath;
-          const fileContent = fs.readFileSync(filePath, 'utf-8');
-          emails = JSON.parse(fileContent);
-          break;
+        try {
+          if (fs.existsSync(filePath)) {
+            foundPath = filePath;
+            const fileContent = fs.readFileSync(filePath, 'utf-8');
+            emails = JSON.parse(fileContent);
+            console.log(`✅ Found file at: ${foundPath} with ${emails.length} emails`);
+            break;
+          }
+        } catch (err) {
+          console.log(`❌ Failed to read ${filePath}:`, err.message);
         }
       }
 
-      console.log('Found file at:', foundPath);
-      console.log('Email count:', emails.length);
+      console.log('Final count:', emails.length);
 
       return res.status(200).json({ 
-        count: emails.length,
-        debug: {
-          foundPath,
-          cwd: process.cwd(),
-          dirname: __dirname
-        }
+        count: emails.length
       });
     } catch (error) {
       console.error('Error getting count:', error);
