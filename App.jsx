@@ -267,7 +267,7 @@ const EnuidLab = () => {
       <nav className="absolute top-6 md:top-8 right-4 md:right-8 z-50 px-4 md:px-6 lg:px-8 py-2 md:py-3 rounded-lg bg-white/100 border border-white/20">
         <div className="flex gap-3 md:gap-6 lg:gap-8 text-[10px] md:text-xs font-light tracking-wide uppercase">
           <a href="#lab" className="transition-colors text-black/100 hover:text-black/70">Lab</a>
-          <a href="#fluid" className="transition-colors text-black/100 hover:text-black/70">Fluid</a>
+          <a href="#fluid-orbit" className="transition-colors text-black/100 hover:text-black/70">Fluid</a>
           <a href="#experiments" className="transition-colors text-black/100 hover:text-black/70 hidden sm:inline">Experiments</a>
           <Link to="/blogs" className="transition-colors text-black/100 hover:text-black/70">Journal</Link>
         </div>
