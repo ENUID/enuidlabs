@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "server.js",
+      "src": "api/save-email.js",
       "use": "@vercel/node"
     },
     {
@@ -15,12 +15,17 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/server.js"
+      "src": "/api/save-email",
+      "dest": "/api/save-email.js"
+    },
+    {
+      "src": "/api/emails/count",
+      "dest": "/api/save-email.js"
     },
     {
       "src": "/(.*)",
       "dest": "/$1"
     }
-  ]
+  ],
+  "includeFiles": ["wishlist-emails.json"]
 }

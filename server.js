@@ -13,10 +13,8 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// Use /tmp directory for Vercel serverless
-const emailsFilePath = process.env.VERCEL 
-  ? '/tmp/wishlist-emails.json' 
-  : path.join(__dirname, 'wishlist-emails.json');
+// Always use the same file path
+const emailsFilePath = path.join(__dirname, 'wishlist-emails.json');
 
 // Initialize the file if it doesn't exist
 if (!fs.existsSync(emailsFilePath)) {
