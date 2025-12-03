@@ -1,11 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { kv } from '@vercel/kv';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export default function handler(req, res) {
+export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -23,48 +18,27 @@ export default function handler(req, res) {
         return res.status(400).json({ error: 'Email is required' });
       }
 
-      // Try multiple possible paths for the wishlist file
-      const possiblePaths = [
-        path.join(__dirname, '..', 'wishlist-emails.json'),
-        path.join(process.cwd(), 'wishlist-emails.json'),
-        path.join(__dirname, 'wishlist-emails.json'),
-      ];
+      // Normalize email to lowercase for consistent checking
+      const normalizedEmail = email.toLowerCase().trim();
 
-      let emailsFilePath = null;
-      let emails = [];
-
-      for (const filePath of possiblePaths) {
-        if (fs.existsSync(filePath)) {
-          emailsFilePath = filePath;
-          const fileContent = fs.readFileSync(filePath, 'utf-8');
-          emails = JSON.parse(fileContent);
-          break;
-        }
-      }
-
-      // If no file found, use the first path and create it
-      if (!emailsFilePath) {
-        emailsFilePath = possiblePaths[0];
-      }
-
-      // Check if email already exists
-      const emailExists = emails.some(entry => entry.email === email);
-      if (emailExists) {
+      // Check if email already exists in KV store
+      const existingEmail = await kv.get(`email:${normalizedEmail}`);
+      
+      if (existingEmail) {
+        console.log(`❌ Duplicate email attempt: ${normalizedEmail}`);
         return res.status(200).json({ message: 'Email already registered' });
       }
 
-      emails.push({ email, timestamp });
-      
-      // Try to write the file
-      try {
-        fs.writeFileSync(emailsFilePath, JSON.stringify(emails, null, 2));
-        console.log(`✅ Email saved: ${email} to ${emailsFilePath}`);
-      } catch (writeError) {
-        console.error('Cannot write to filesystem on Vercel:', writeError);
-        // On Vercel, we can't write to filesystem, so just return success
-        // You'll need a database for production
-      }
+      // Save email to KV store
+      await kv.set(`email:${normalizedEmail}`, {
+        email: normalizedEmail,
+        timestamp: timestamp || new Date().toISOString()
+      });
 
+      // Increment the counter
+      await kv.incr('wishlist:count');
+
+      console.log(`✅ New email saved: ${normalizedEmail}`);
       return res.status(200).json({ message: 'Email saved successfully' });
     } catch (error) {
       console.error('Error saving email:', error);

@@ -1,11 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { kv } from '@vercel/kv';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export default function handler(req, res) {
+export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -17,36 +12,13 @@ export default function handler(req, res) {
 
   if (req.method === 'GET') {
     try {
-      // Try multiple possible paths for the wishlist file
-      const possiblePaths = [
-        path.join(__dirname, 'wishlist-emails.json'), // Same directory as the function
-        path.join(__dirname, '..', 'wishlist-emails.json'), // Parent api directory
-        path.join(__dirname, '..', '..', 'wishlist-emails.json'), // Root directory
-        path.join(process.cwd(), 'wishlist-emails.json'),
-        path.join(process.cwd(), 'api', 'emails', 'wishlist-emails.json'),
-      ];
-
-      let emails = [];
-      let foundPath = null;
-
-      for (const filePath of possiblePaths) {
-        try {
-          if (fs.existsSync(filePath)) {
-            foundPath = filePath;
-            const fileContent = fs.readFileSync(filePath, 'utf-8');
-            emails = JSON.parse(fileContent);
-            console.log(`✅ Found file at: ${foundPath} with ${emails.length} emails`);
-            break;
-          }
-        } catch (err) {
-          console.log(`❌ Failed to read ${filePath}:`, err.message);
-        }
-      }
-
-      console.log('Final count:', emails.length);
+      // Get count from KV store
+      const count = await kv.get('wishlist:count') || 0;
+      
+      console.log('Current wishlist count:', count);
 
       return res.status(200).json({ 
-        count: emails.length
+        count: Number(count)
       });
     } catch (error) {
       console.error('Error getting count:', error);
