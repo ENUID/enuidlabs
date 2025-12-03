@@ -1,12 +1,17 @@
-# Firebase Setup Guide (Super Simple!)
+# Firebase Setup Guide
 
-## Step 1: Create Firebase Project
+## Using Existing Firebase Project
+
+If you already have a Firebase project with emails stored in a `wishlist` collection, just add the credentials to Vercel environment variables.
+
+## Step 1: Get Firebase Credentials
 
 1. Go to https://console.firebase.google.com
-2. Click "Add project"
-3. Name it: `ENUID Wishlist`
-4. Disable Google Analytics (not needed)
-5. Click "Create project"
+2. Select your existing project
+3. Click gear icon ⚙️ → "Project settings"
+4. Go to "Service accounts" tab
+5. Click "Generate new private key"
+6. Download the JSON file
 
 ## Step 2: Enable Firestore Database
 
