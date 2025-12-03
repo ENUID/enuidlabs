@@ -1,16 +1,17 @@
-import { google } from 'googleapis';
+import admin from 'firebase-admin';
 
-const getGoogleSheetsClient = () => {
-  const auth = new google.auth.GoogleAuth({
-    credentials: {
-      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    },
-    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+// Initialize Firebase Admin
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    }),
   });
+}
 
-  return google.sheets({ version: 'v4', auth });
-};
+const db = admin.firestore();
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -24,17 +25,9 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     try {
-      const sheets = getGoogleSheetsClient();
-      const spreadsheetId = process.env.GOOGLE_SHEET_ID;
-
-      // Get all emails from the sheet
-      const response = await sheets.spreadsheets.values.get({
-        spreadsheetId,
-        range: 'Sheet1!A:A',
-      });
-
-      const emails = response.data.values || [];
-      const count = emails.length;
+      // Get count of documents in wishlist collection
+      const snapshot = await db.collection('wishlist').count().get();
+      const count = snapshot.data().count;
 
       console.log(`Current wishlist count: ${count}`);
 

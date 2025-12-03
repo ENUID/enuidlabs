@@ -1,16 +1,17 @@
-import { google } from 'googleapis';
+import admin from 'firebase-admin';
 
-const getGoogleSheetsClient = () => {
-  const auth = new google.auth.GoogleAuth({
-    credentials: {
-      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-    },
-    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+// Initialize Firebase Admin
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    }),
   });
+}
 
-  return google.sheets({ version: 'v4', auth });
-};
+const db = admin.firestore();
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -33,36 +34,22 @@ export default async function handler(req, res) {
       // Normalize email to lowercase for consistent checking
       const normalizedEmail = email.toLowerCase().trim();
 
-      const sheets = getGoogleSheetsClient();
-      const spreadsheetId = process.env.GOOGLE_SHEET_ID;
+      // Check if email already exists
+      const emailDoc = await db.collection('wishlist').doc(normalizedEmail).get();
 
-      // Get all existing emails to check for duplicates
-      const response = await sheets.spreadsheets.values.get({
-        spreadsheetId,
-        range: 'Sheet1!A:A',
-      });
-
-      const existingEmails = response.data.values || [];
-      const emailExists = existingEmails.some(
-        row => row[0]?.toLowerCase() === normalizedEmail
-      );
-
-      if (emailExists) {
+      if (emailDoc.exists) {
         console.log(`❌ Duplicate email attempt: ${normalizedEmail}`);
         return res.status(200).json({ message: 'Email already registered' });
       }
 
-      // Add new email to sheet
-      await sheets.spreadsheets.values.append({
-        spreadsheetId,
-        range: 'Sheet1!A:B',
-        valueInputOption: 'USER_ENTERED',
-        requestBody: {
-          values: [[normalizedEmail, timestamp || new Date().toISOString()]],
-        },
+      // Save email to Firestore
+      await db.collection('wishlist').doc(normalizedEmail).set({
+        email: normalizedEmail,
+        timestamp: timestamp || admin.firestore.FieldValue.serverTimestamp(),
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
       });
 
-      console.log(`✅ Email saved to Google Sheets: ${normalizedEmail}`);
+      console.log(`✅ Email saved to Firebase: ${normalizedEmail}`);
       return res.status(200).json({ message: 'Email saved successfully' });
     } catch (error) {
       console.error('Error saving email:', error);
