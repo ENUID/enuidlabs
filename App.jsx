@@ -267,12 +267,11 @@ const EnuidLab = () => {
       <nav className="absolute top-6 md:top-8 right-4 md:right-8 z-50 px-4 md:px-6 lg:px-8 py-2 md:py-3 rounded-lg bg-white/100 border border-white/20">
         <div className="flex gap-3 md:gap-6 lg:gap-8 text-[10px] md:text-xs font-light tracking-wide uppercase">
           <a href="#lab" className="transition-colors text-black/100 hover:text-black/70">Lab</a>
-          <a href="#fluid-orbit" className="transition-colors text-black/100 hover:text-black/70">Fluid</a>
+          <a href="#fluid-orbit" className="transition-colors text-black/100 hover:text-black/70">Fluid Orbit</a>
           <a href="#experiments" className="transition-colors text-black/100 hover:text-black/70 hidden sm:inline">Experiments</a>
           <Link to="/blogs" className="transition-colors text-black/100 hover:text-black/70">Journal</Link>
         </div>
       </nav>
-
     
       {/* 1. Hero / Concept Section */}
       <section className="relative min-h-screen w-full overflow-hidden pt-24 md:pt-32 pb-10 flex flex-col z-10">
@@ -295,7 +294,7 @@ const EnuidLab = () => {
               </p>
 
               <div className="flex flex-col sm:flex-row items-start gap-4 md:gap-6 pt-4">
-                <a href="#fluid" className="px-6 py-3 rounded-lg transition-all bg-white text-black border border-white hover:bg-gray-100 flex items-center justify-center gap-2 font-medium text-sm md:text-base w-full sm:w-auto">
+                <a href="#fluid-orbit" className="px-6 py-3 rounded-lg transition-all bg-white text-black border border-white hover:bg-gray-100 flex items-center justify-center gap-2 font-medium text-sm md:text-base w-full sm:w-auto">
                    Fluid Orbit <ArrowRight className="w-3 h-3" />
                 </a>
               </div>
@@ -410,7 +409,7 @@ const EnuidLab = () => {
       </div>
 
       {/* 4. Fluid Orbit */}
-      <section id="fluid" className="relative min-h-screen w-full py-16 md:py-24 lg:py-32 flex flex-col justify-center bg-black text-white">
+      <section id="fluid-orbit" className="relative min-h-screen w-full py-16 md:py-24 lg:py-32 flex flex-col justify-center bg-black text-white">
         <div className="px-4 md:px-8 lg:px-24 max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 lg:gap-24 items-center">
              {/* Left Column - Text Content */}
