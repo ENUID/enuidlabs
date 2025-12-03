@@ -1,31 +1,14 @@
 {
-  "version": 2,
-  "builds": [
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
     {
-      "src": "api/save-email.js",
-      "use": "@vercel/node"
+      "source": "/api/save-email",
+      "destination": "/api/save-email.js"
     },
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
+      "source": "/api/emails/count",
+      "destination": "/api/emails/count.js"
     }
-  ],
-  "routes": [
-    {
-      "src": "/api/save-email",
-      "dest": "/api/save-email.js"
-    },
-    {
-      "src": "/api/emails/count",
-      "dest": "/api/save-email.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
-  "includeFiles": ["wishlist-emails.json"]
+  ]
 }
