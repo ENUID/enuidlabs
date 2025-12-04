@@ -29,20 +29,24 @@ app.post('/api/save-email', (req, res) => {
       return res.status(400).json({ error: 'Email is required' });
     }
 
+    // Normalize email to lowercase for consistent checking
+    const normalizedEmail = email.toLowerCase().trim();
+
     let emails = [];
     const fileContent = fs.readFileSync(emailsFilePath, 'utf-8');
     emails = JSON.parse(fileContent);
 
-    // Check if email already exists
-    const emailExists = emails.some(entry => entry.email === email);
+    // Check if email already exists (case-insensitive)
+    const emailExists = emails.some(entry => entry.email.toLowerCase().trim() === normalizedEmail);
     if (emailExists) {
+      console.log(`❌ Duplicate email attempt: ${normalizedEmail}`);
       return res.status(200).json({ message: 'Email already registered' });
     }
 
-    emails.push({ email, timestamp });
+    emails.push({ email: normalizedEmail, timestamp });
     fs.writeFileSync(emailsFilePath, JSON.stringify(emails, null, 2));
 
-    console.log(`✅ New email added: ${email} (Total: ${emails.length})`);
+    console.log(`✅ New email added: ${normalizedEmail} (Total: ${emails.length})`);
     return res.status(200).json({ message: 'Email saved successfully' });
   } catch (error) {
     console.error('❌ Error saving email:', error);
