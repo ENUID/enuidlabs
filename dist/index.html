@@ -2,15 +2,54 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="ENUID - An independent lab for studying and building intelligence carefully" />
-    <title>ENUID - Everything starts with an understanding</title>
+    <title>ENUID</title>
+    
+    <!-- Favicons with theme support -->
+    <link rel="icon" type="image/jpeg" id="favicon" href="/white tab logo .JPG" />
+    <link rel="apple-touch-icon" id="apple-touch-icon" href="/white tab logo .JPG" />
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="/assets/index-ZY6a4XZq.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-BacyABUm.css">
+    
+    <script>
+      // Dynamic favicon switching based on browser theme
+      (function() {
+        function updateFavicon() {
+          const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const logoPath = isDark ? '/black tab logo.JPG' : '/white tab logo .JPG';
+          
+          // Update main favicon
+          const favicon = document.getElementById('favicon');
+          if (favicon) {
+            favicon.href = logoPath;
+          }
+          
+          // Update Apple touch icon
+          const appleTouchIcon = document.getElementById('apple-touch-icon');
+          if (appleTouchIcon) {
+            appleTouchIcon.href = logoPath;
+          }
+        }
+        
+        // Update immediately
+        updateFavicon();
+        
+        // Listen for theme changes
+        const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        if (darkModeQuery.addEventListener) {
+          darkModeQuery.addEventListener('change', updateFavicon);
+        } else {
+          // Fallback for older browsers
+          darkModeQuery.addListener(updateFavicon);
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-C3rCbzWX.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-D0jVisnw.css">
   </head>
   <body>
     <div id="root"></div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Search, Layers, Box, Users, X, Mail, Check, ChevronRight, ChevronUp } from 'lucide-react';
+import { ArrowRight, Search, Layers, Box, Users, X, Mail, Check, ChevronRight, ChevronUp, Menu } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // --- Components ---
@@ -46,7 +46,7 @@ const WishlistModal = ({ isOpen, onClose, onEmailAdded, initialEmail = '' }) => 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [countdown, setCountdown] = useState(0);
+
 
   // Update email when initialEmail changes
   useEffect(() => {
@@ -68,56 +68,22 @@ const WishlistModal = ({ isOpen, onClose, onEmailAdded, initialEmail = '' }) => 
       return;
     }
 
-    setIsLoading(true);
-    setCountdown(3);
+    // Show success and close immediately
+    setIsSubmitted(true);
+    onEmailAdded();
+    onClose();
+    setEmail('');
 
-    // Start 3-second countdown
-    const countdownInterval = setInterval(() => {
-      setCountdown(prev => {
-        if (prev <= 1) {
-          clearInterval(countdownInterval);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
+    // Save to server in background (fire and forget)
     try {
-      // Wait for 3 seconds
-      await new Promise(resolve => setTimeout(resolve, 3000));
-
       const apiUrl = import.meta.env.PROD ? '/api/save-email' : 'http://localhost:3001/api/save-email';
-      const response = await fetch(apiUrl, {
+      fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, timestamp: new Date().toISOString() })
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        if (data.message === 'Email already registered') {
-          setError('This email has already registered. Use different email to join.');
-          setIsLoading(false);
-          return;
-        }
-        setIsSubmitted(true);
-        onEmailAdded();
-        setTimeout(() => {
-          onClose();
-          setTimeout(() => {
-            setIsSubmitted(false);
-            setEmail('');
-          }, 300);
-        }, 2000);
-      } else {
-        setError('Something went wrong. Please try again.');
-      }
     } catch (err) {
-      setError('Could not connect to server. Please try again.');
-    } finally {
-      setIsLoading(false);
-      setCountdown(0);
+      console.error('Error saving email:', err);
     }
   };
 
@@ -201,6 +167,119 @@ const WishlistModal = ({ isOpen, onClose, onEmailAdded, initialEmail = '' }) => 
   );
 };
 
+const PrivacyModal = ({ isOpen, onClose }) => {
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+          />
+
+          <div className="fixed inset-0 z-50 flex  items-center justify-center p-4 pointer-events-none overflow-y-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 50 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="relative w-full max-w-3xl pointer-events-auto my-8"
+            >
+              <div className="bg-white p-8 md:p-12 shadow-2xl border border-gray-100 relative max-h-[80vh] overflow-y-auto rounded-lg">
+                <button
+                  onClick={onClose}
+                  className="absolute top-4 right-4 md:top-6 md:right-6 p-2 hover:bg-gray-100 transition-colors rounded-full"
+                  aria-label="Close"
+                >
+                  <X className="w-4 h-4 md:w-5 md:h-5 text-black" />
+                </button>
+
+                <div className="pr-8 ">
+                  <h2 className="text-2xl md:text-3xl font-bold text-black mb-2">Privacy Policy</h2>
+                  <p className="text-sm text-gray-500 mb-8">Last updated: 3/December/2025</p>
+
+                  <div className="space-y-6 text-xs md:text-sm text-gray-700 leading-relaxed">
+                    <p>
+                      ENUID is an independent AI lab exploring new systems, experiments, and prototypes. This policy explains what we collect and how we handle it while we continue to build and test our work.
+                    </p>
+
+                    <div>
+                      <h3 className="text-sm md:text-base font-bold text-black mb-2">Information we collect</h3>
+                      <p className="mb-2">We collect limited information to keep the lab running and to understand how people use our work. This includes:</p>
+                      <ul className="list-disc pl-6 space-y-1">
+                        <li>Information you share with us, such as your name or email if you contact us</li>
+                        <li>Inputs you submit in our demos or prototypes</li>
+                        <li>Basic analytics like device type, IP address, and usage patterns</li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3 className="text-sm md:text-base font-bold text-black mb-2">How we use the information</h3>
+                      <p className="mb-2">We use this information to:</p>
+                      <ul className="list-disc pl-6 space-y-1">
+                        <li>Operate and improve our experiments and prototypes</li>
+                        <li>Understand how people interact with our work</li>
+                        <li>Keep the lab's systems secure</li>
+                        <li>Communicate with you when needed</li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3 className="text-sm md:text-base font-bold text-black mb-2">Sharing</h3>
+                      <p>
+                        We do not sell your personal data. We share information only with trusted service providers that help us host or operate parts of the site or when required by law.
+                      </p>
+                    </div>
+
+                    <div>
+                      <h3 className="text-sm md:text-base font-bold text-black mb-2">Data retention</h3>
+                      <p>
+                        We store data only for as long as needed to run and improve our experiments. You can request deletion of your data at any time.
+                      </p>
+                    </div>
+
+                    <div>
+                      <h3 className="text-sm md:text-base font-bold text-black mb-2">Security</h3>
+                      <p>
+                        We follow reasonable security practices for early stage research and experimental systems. While we work to protect your information, no system is perfectly secure.
+                      </p>
+                    </div>
+
+                    <div>
+                      <h3 className="text-sm md:text-base font-bold text-black mb-2">Your choices</h3>
+                      <p>
+                        You can contact us to access, update, or delete your information.
+                      </p>
+                      <p className="mt-2">Email: <a href="mailto:no-reply@gmail.com" className="text-black underline">no-reply@enuid.com</a></p>
+                    </div>
+
+                    <div>
+                      <h3 className="text-sm md:text-base font-bold text-black mb-2">Changes</h3>
+                      <p>
+                        As the lab evolves and our work expands, we may update this policy. We will reflect changes on this page.
+                      </p>
+                    </div>
+
+                    <div>
+                      <h3 className="text-sm md:text-base font-bold text-black mb-2">Contact</h3>
+                      <p>For any questions about this policy:</p>
+                      <p className="mt-2"><a href="mailto:no-reply@gmail.com" className="text-black underline">no-reply@enuid.com</a></p>
+                      <p className="mt-4 font-bold">ENUID <span className='font-medium'>(Evolving Neural Understanding Intelligence Development) </span></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
+
 // --- Data ---
 
 const principles = [
@@ -214,21 +293,20 @@ const experiments = [
   { id: "01", title: "Shop at the Speed of Thought.", status: "In progress", desc: "Most searches are vague, messy, or incomplete, and marketplaces only match keywords, ad products, sponsors. Fluid Orbit is experimenting with ways to interpret intent the way a person would understanding preferences, constraints, tradeoffs, and the nuance behind each request, so the system can guide people to the right product without guesswork." },
   { id: "02", title: "", status: "", desc: "" },
   { id: "03", title: "", status: "", desc: "" },
-  { id: "04", title: "", status: "", desc: "" },
-  { id: "05", title: "", status: "", desc: "" },
-  { id: "06", title: "", status: "", desc: "" },
 ];
 
 // --- Main Application ---
 
 const EnuidLab = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [emailCount, setEmailCount] = useState(0);
   const [mainEmail, setMainEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
   const [hasJoined, setHasJoined] = useState(false);
-  const [mainCountdown, setMainCountdown] = useState(0);
+
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
 
@@ -249,55 +327,179 @@ const EnuidLab = () => {
   return (
     <div className="relative min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white overflow-x-hidden">
       
-      {/* Background Image */}
+      {/* Black Background */}
       <div 
-        className="fixed inset-0 z-0 bg-cover bg-top bg-no-repeat"
-        style={{ 
-          backgroundImage: 'url(/background.JPG)',
-          backgroundAttachment: 'fixed',
-          filter: 'brightness(1.3) contrast(0.95)'
-        }}
+        className="fixed inset-0 z-0 bg-black"
       />
-      
-      {/* Removed glassmorphism overlay */}
       
       <Logo />
 
-      {/* Navigation */}
-      <nav className="absolute top-6 md:top-8 right-4 md:right-8 z-50 px-4 md:px-6 lg:px-8 py-2 md:py-3 rounded-lg bg-white/100 border border-white/20">
+      {/* Mobile Menu Button - Only visible on mobile */}
+      <button
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="md:hidden absolute top-6 right-4 z-50 p-2.5 rounded-full bg-black/90 backdrop-blur-md border border-white/20 hover:bg-black transition-all"
+        aria-label="Toggle menu"
+      >
+        {isMobileMenuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
+      </button>
+
+      {/* Desktop Navigation - Only visible on desktop */}
+      <nav className="hidden md:block absolute top-6 md:top-8 right-4 md:right-8 z-50 px-4 md:px-6 lg:px-8 py-2 md:py-3 rounded-lg bg-white/100 backdrop-blur-sm border border-white/60">
         <div className="flex gap-3 md:gap-6 lg:gap-8 text-[10px] md:text-xs font-light tracking-wide uppercase">
-          <a href="#lab" className="transition-colors text-black/100 hover:text-black/70">Lab</a>
-          <a href="#fluid-orbit" className="transition-colors text-black/100 hover:text-black/70">Fluid Orbit</a>
-          <a href="#experiments" className="transition-colors text-black/100 hover:text-black/70 hidden sm:inline">Experiments</a>
-          <Link to="/blogs" className="transition-colors text-black/100 hover:text-black/70">Journal</Link>
+          <a href="#lab" className="transition-colors text-black/100 hover:text-black/60">Lab</a>
+          <a href="#fluid-orbit" className="transition-colors text-black/100 hover:text-black/60">Fluid Orbit</a>
+          <a href="#experiments" className="transition-colors text-black/100 hover:text-black/60">Experiments</a>
+          <Link to="/blogs" className="transition-colors text-black/100 hover:text-black/60">Journal</Link>
         </div>
       </nav>
+
+      {/* Mobile Menu - Full Screen Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden fixed inset-0 bg-black z-40"
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="absolute top-6 right-4 z-50 p-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all"
+              aria-label="Close menu"
+            >
+              <X className="w-5 h-5 text-white" />
+            </button>
+
+            {/* Menu Content */}
+            <div className="flex flex-col items-end justify-center h-full px-8 pr-6">
+              <motion.div 
+                className="flex flex-col items-end gap-8 w-full"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.1, duration: 0.4 }}
+              >
+                {/* Navigation Links */}
+                <motion.a 
+                  href="#lab" 
+                  onClick={() => setIsMobileMenuOpen(false)} 
+                  className="text-3xl font-light text-white hover:text-gray-300 transition-colors tracking-wider relative group text-right"
+                  initial={{ x: 20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.15 }}
+                >
+                  Lab
+                  <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-white transition-all group-hover:w-full"></span>
+                </motion.a>
+
+                <motion.a 
+                  href="#fluid-orbit" 
+                  onClick={() => setIsMobileMenuOpen(false)} 
+                  className="text-3xl font-light text-white hover:text-gray-300 transition-colors tracking-wider relative group text-right"
+                  initial={{ x: 20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  Fluid Orbit
+                  <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-white transition-all group-hover:w-full"></span>
+                </motion.a>
+
+                <motion.a 
+                  href="#experiments" 
+                  onClick={() => setIsMobileMenuOpen(false)} 
+                  className="text-3xl font-light text-white hover:text-gray-300 transition-colors tracking-wider relative group text-right"
+                  initial={{ x: 20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.25 }}
+                >
+                  Experiments
+                  <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-white transition-all group-hover:w-full"></span>
+                </motion.a>
+
+                <motion.div
+                  initial={{ x: 20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-right"
+                >
+                  <Link 
+                    to="/blogs" 
+                    onClick={() => setIsMobileMenuOpen(false)} 
+                    className="text-3xl font-light text-white hover:text-gray-300 transition-colors tracking-wider relative group"
+                  >
+                    Journal
+                    <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-white transition-all group-hover:w-full"></span>
+                  </Link>
+                </motion.div>
+
+                {/* Decorative Line */}
+                <motion.div 
+                  className="w-16 h-px bg-white/30 mt-4"
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.4, duration: 0.5 }}
+                />
+
+                {/* Footer Text */}
+                <motion.p 
+                  className="text-xs text-white/50 tracking-widest uppercase mt-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  ENUID Labs
+                </motion.p>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     
       {/* 1. Hero / Concept Section */}
       <section className="relative min-h-screen w-full overflow-hidden pt-24 md:pt-32 pb-10 flex flex-col z-10">
         <div className="w-full flex-grow flex items-center relative px-4 md:px-8 lg:px-16">
           
-          <div className="flex flex-col items-start max-w-2xl z-10 relative">
-            
-            {/* Central Glowing Element Removed */}
-
-            <div className="space-y-6 md:space-y-8 pt-12 md:pt-20">
-              <div className="flex items-center gap-4 mb-4 md:mb-6">
-               
-                <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-tight text-white leading-tight" style={{ fontWeight: 400 }}>
-                  Everything starts<br/>with an understanding.
-                </h1>
-              </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center w-full max-w-7xl mx-auto">
+            {/* Left Column - Text Content */}
+            <div className="flex flex-col items-start z-10 relative">
               
-              <p className="text-sm md:text-base text-white/80 max-w-2xl leading-relaxed">
-               ENUID is an independent lab for studying and building intelligence carefully. We question it, break it, rebuild it, and keep going until it is actually useful for people in the real world.
-              </p>
+              {/* Central Glowing Element Removed */}
 
-              <div className="flex flex-col sm:flex-row items-start gap-4 md:gap-6 pt-4">
-                <a href="#fluid-orbit" className="px-6 py-3 rounded-lg transition-all bg-white text-black border border-white hover:bg-gray-100 flex items-center justify-center gap-2 font-medium text-sm md:text-base w-full sm:w-auto">
-                   Fluid Orbit <ArrowRight className="w-3 h-3" />
-                </a>
+              <div className="space-y-6 md:space-y-8 pt-12 md:pt-20 lg:pt-0">
+                <div className="flex items-center gap-4 mb-4 md:mb-6">
+                 
+                  <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-tight text-white leading-tight" style={{ fontWeight: 400 }}>
+                    Everything starts<br/>with an understanding.
+                  </h1>
+                </div>
+                
+                <p className="text-sm md:text-base text-white/80 max-w-2xl leading-relaxed">
+                 ENUID is an independent lab for studying and building intelligence carefully. We question it, break it, rebuild it, and keep going until it is actually useful for people in the real world.
+                </p>
+
+                <div className="flex flex-col sm:flex-row items-start gap-4 md:gap-6 pt-4">
+                  <a href="#fluid-orbit" className="px-6 py-3 rounded-lg transition-all bg-white text-black border border-white hover:bg-gray-100 flex items-center justify-center gap-2 font-medium text-sm md:text-base w-full sm:w-auto">
+                     Fluid Orbit <ArrowRight className="w-3 h-3" />
+                  </a>
+                </div>
               </div>
+            </div>
+
+            {/* Right Column - Hand Image */}
+            <div className="flex justify-center lg:justify-end items-center h-full overflow-hidden">
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="relative w-full max-w-lg px-4 lg:px-0"
+              >
+                <img
+                  src="/hand.JPG"
+                  alt="ENUID Hand"
+                  className="w-full h-auto object-contain rounded-lg max-w-full"
+                />
+              </motion.div>
             </div>
           </div>
         </div>
@@ -409,7 +611,7 @@ const EnuidLab = () => {
       </div>
 
       {/* 4. Fluid Orbit */}
-      <section id="fluid-orbit" className="relative min-h-screen w-full py-16 md:py-24 lg:py-32 flex flex-col justify-center bg-black text-white">
+      <section id="fluid-orbit" className="relative min-h-screen w-full md:py-8 flex flex-col justify-center bg-black text-white">
         <div className="px-4 md:px-8 lg:px-24 max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 lg:gap-24 items-center">
              {/* Left Column - Text Content */}
@@ -448,57 +650,29 @@ const EnuidLab = () => {
                   
                   <form onSubmit={async (e) => {
                     e.preventDefault();
-                    setIsSubmitting(true);
-                    setSubmitMessage('');
-                    setMainCountdown(3);
+                    
+                    // Show success immediately
+                    setSubmitMessage('Wishlist Joined');
+                    setHasJoined(true);
+                    setEmailCount(prev => prev + 1);
 
-                    // Start 3-second countdown
-                    const countdownInterval = setInterval(() => {
-                      setMainCountdown(prev => {
-                        if (prev <= 1) {
-                          clearInterval(countdownInterval);
-                          return 0;
-                        }
-                        return prev - 1;
-                      });
+                    // Reset after 1 second
+                    setTimeout(() => {
+                      setHasJoined(false);
+                      setSubmitMessage('');
+                      setMainEmail('');
                     }, 1000);
 
+                    // Save to server in background (fire and forget)
                     try {
-                      // Wait for 3 seconds
-                      await new Promise(resolve => setTimeout(resolve, 3000));
-
                       const apiUrl = import.meta.env.PROD ? '/api/save-email' : 'http://localhost:3001/api/save-email';
-                      const response = await fetch(apiUrl, {
+                      fetch(apiUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email: mainEmail, timestamp: new Date().toISOString() })
                       });
-
-                      const data = await response.json();
-
-                      if (response.ok) {
-                        if (data.message === 'Email already registered') {
-                          setSubmitMessage('This email has already registered. Use different email to join.');
-                        } else {
-                          setSubmitMessage('Wishlist Joined');
-                          setHasJoined(true);
-                          setEmailCount(prev => prev + 1);
-                          
-                          // Reset after 3 seconds to allow new email entry
-                          setTimeout(() => {
-                            setHasJoined(false);
-                            setSubmitMessage('');
-                            setMainEmail('');
-                          }, 3000);
-                        }
-                      } else {
-                        setSubmitMessage('Something went wrong. Please try again.');
-                      }
                     } catch (err) {
-                      setSubmitMessage('Could not connect to server. Please try again.');
-                    } finally {
-                      setIsSubmitting(false);
-                      setMainCountdown(0);
+                      console.error('Error saving email:', err);
                     }
                   }} className="flex flex-col sm:flex-row gap-3 md:gap-4">
                     <input
@@ -519,7 +693,7 @@ const EnuidLab = () => {
                           : 'bg-gray-600 text-black hover:bg-gray-400 disabled:opacity-50'
                       }`}
                     >
-                      {isSubmitting ? 'Wishlist Joined' : hasJoined ? 'Wishlist Joined' : 'Join Wishlist'} <ArrowRight className="w-4 h-4 " />
+                      {isSubmitting ? 'Waitlist Joined' : hasJoined ? 'Waitlist Joined' : 'Join Waitlist'} <ArrowRight className="w-4 h-4 " />
                     </button>
                   </form>
                   
@@ -530,7 +704,7 @@ const EnuidLab = () => {
                   )}
                   
                   <p className="text-xs md:text-sm text-gray-500">
-                    {emailCount} people joined the wishlist
+                    {emailCount} people joined the waitlist
                   </p>
                 </div>
              </div>
@@ -607,7 +781,7 @@ const EnuidLab = () => {
       </section>
 
       {/* Footer */}
-      <footer className="relative py-12 md:py-16 lg:py-20 bg-black">
+      <footer className="relative py-8 md:py-16 lg:py-20 bg-black">
         <div className="px-4 md:px-8 lg:px-24 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-6 md:gap-8 mb-6 md:mb-8">
             {/* Left: ENUID LABS */}
@@ -628,8 +802,8 @@ const EnuidLab = () => {
             
             {/* Right: Contact & Privacy */}
             <div className="flex gap-6 md:gap-8 text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-wider justify-self-center md:justify-self-end">
-              <a href="#" className="hover:text-white transition-colors">Contact</a>
-              <a href="#" className="hover:text-white transition-colors">Privacy</a>
+              <a href="mailto:no-reply@gmail.com" className="hover:text-white transition-colors">Contact</a>
+              <button onClick={() => setIsPrivacyModalOpen(true)} className="hover:text-white transition-colors">PRIVACY</button>
             </div>
           </div>
           
@@ -653,6 +827,11 @@ const EnuidLab = () => {
           setMainEmail('');
         }}
         initialEmail={mainEmail}
+      />
+
+      <PrivacyModal 
+        isOpen={isPrivacyModalOpen} 
+        onClose={() => setIsPrivacyModalOpen(false)} 
       />
     </div>
   );

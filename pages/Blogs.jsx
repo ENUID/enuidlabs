@@ -1,5 +1,7 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
+import { useState } from 'react';
 
 const Logo = () => (
   <div className="absolute top-4 left-4 md:left-8 z-50 flex items-center gap-2 md:gap-3">
@@ -10,7 +12,7 @@ const Logo = () => (
 
 const Blogs = () => {
   return (
-    <div className="relative min-h-screen bg-white text-black font-sans">
+    <div className="relative min-h-screen bg-white text-black font-sans overflow-x-hidden">
       <Logo />
 
       {/* Navigation */}
@@ -55,7 +57,7 @@ const Blogs = () => {
               <p className="text-xs md:text-sm text-black/80 leading-relaxed">
                 ENUID is not chasing trends. We are building tools that should exist. Tools that matter, for people. We are building tools that should exist. Tools that matter, for people.
               </p>
-              <p className="text-[10px] md:text-xs text-gray-500 leading-relaxed">
+              <p className="text-[10px] md:text-xs text-gray-500 leading-relaxed pb-16 md:pb-20 lg:pb-24">
                    by: Team ENUID <br/>
                     Dated: 3/December/2025
                       </p>
