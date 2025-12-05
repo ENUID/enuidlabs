@@ -212,7 +212,7 @@ const PrivacyModal = ({ isOpen, onClose }) => {
 
                 <div className="pr-8 ">
                   <h2 className="text-2xl md:text-3xl font-bold text-black mb-2">Privacy Policy</h2>
-                  <p className="text-sm text-gray-500 mb-8">Last updated: 3/December/2025</p>
+                  <p className="text-[10px] md:text-xs text-gray-500 mb-8">Last updated: 3/December/2025</p>
 
                   <div className="space-y-6 text-xs md:text-sm text-gray-700 leading-relaxed">
                     <p>
@@ -718,13 +718,13 @@ const EnuidLab = () => {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className={`px-6 md:px-8 py-3 md:py-4 rounded-lg transition-all flex items-center justify-center gap-2 text-sm md:text-base font-medium whitespace-nowrap disabled:cursor-not-allowed ${
+                      className={`px-6 sm:px-8 md:px-10 lg:px-12 py-3 md:py-4 rounded-lg transition-all flex items-center justify-center gap-2 text-sm md:text-base font-semibold whitespace-nowrap disabled:cursor-not-allowed min-w-[140px] sm:min-w-[160px] md:min-w-[180px] ${
                         hasJoined 
-                          ? 'bg-white text-black border border-white-500' 
-                          : 'bg-gray-600 text-black hover:bg-gray-400 disabled:opacity-50'
+                          ? 'bg-white text-black border-2 border-white shadow-lg' 
+                          : 'bg-gray-600 text-black hover:bg-gray-500 disabled:opacity-50 shadow-md hover:shadow-lg'
                       }`}
                     >
-                      {isSubmitting ? 'Waitlist Joined' : hasJoined ? 'Waitlist Joined' : 'Join Waitlist'} <ArrowRight className="w-4 h-4 " />
+                      {isSubmitting ? 'Waitlist Joined' : hasJoined ? 'Waitlist Joined' : 'Join Waitlist'} <ArrowRight className="w-4 h-4" />
                     </button>
                   </form>
                   
