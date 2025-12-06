@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { X, ChevronUp } from 'lucide-react';
+import { X, ChevronUp, Menu } from 'lucide-react';
 import { useState } from 'react';
 
 const Logo = () => (
@@ -96,7 +96,7 @@ const PrivacyModal = ({ isOpen, onClose }) => {
                       <p>
                         You can contact us to access, update, or delete your information.
                       </p>
-
+                      <p className="mt-2">Email: <a href="mailto:no-reply@enuid.com" className="text-black underline">no-reply@enuid.com</a></p>
                     </div>
 
                     <div>
@@ -124,19 +124,23 @@ const PrivacyModal = ({ isOpen, onClose }) => {
 };
 
 const Blogs = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
 
   return (
     <div className="relative min-h-screen bg-white text-black font-sans overflow-x-hidden">
       <Logo />
 
-      {/* Mobile Home Button - Only visible on mobile */}
-      <Link 
-        to="/"
-        className="md:hidden absolute top-6 right-4 z-50 px-6 py-3 rounded-lg bg-white backdrop-blur-md border border-black/20 hover:bg-gray-100 transition-all shadow-md text-xs font-medium text-black uppercase tracking-wide"
-      >
-        Home
-      </Link>
+      {/* Mobile Menu Button - Only visible on mobile when menu is closed */}
+      {!isMobileMenuOpen && (
+        <button
+          onClick={() => setIsMobileMenuOpen(true)}
+          className="md:hidden absolute top-6 right-4 z-50 p-2.5 rounded-full bg-white backdrop-blur-md border border-black/20 hover:bg-gray-100 transition-all shadow-md"
+          aria-label="Open menu"
+        >
+          <Menu className="w-5 h-5 text-black" />
+        </button>
+      )}
 
       {/* Desktop Navigation - Only visible on desktop */}
       <nav className="hidden md:block absolute top-6 md:top-8 right-4 md:right-8 z-50 px-4 md:px-6 lg:px-8 py-2 md:py-3 rounded-lg bg-white/10 backdrop-blur-xl border border-white/20 shadow-lg">
@@ -147,6 +151,121 @@ const Blogs = () => {
           <Link to="/#experiments" className="transition-colors text-black/90 hover:text-black/70">Experiments</Link>
         </div>
       </nav>
+
+      {/* Mobile Menu - Full Screen Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden fixed inset-0 bg-white z-40"
+          >
+            {/* Close Button - Only visible when menu is open */}
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="absolute top-6 right-4 z-50 p-2.5 rounded-full bg-white backdrop-blur-md border border-black/20 hover:bg-gray-100 transition-all shadow-md"
+              aria-label="Close menu"
+            >
+              <X className="w-5 h-5 text-black" />
+            </button>
+
+            {/* Menu Content */}
+            <div className="flex flex-col items-end justify-center h-full px-8 pr-6">
+              <motion.div 
+                className="flex flex-col items-end gap-8 w-full"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.1, duration: 0.4 }}
+              >
+                {/* Navigation Links */}
+                <motion.div
+                  initial={{ x: 20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.15 }}
+                  className="text-right"
+                >
+                  <Link 
+                    to="/" 
+                    onClick={() => setIsMobileMenuOpen(false)} 
+                    className="text-3xl font-light text-black hover:text-gray-700 transition-colors tracking-wider relative group"
+                  >
+                    Home
+                    <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-black transition-all group-hover:w-full"></span>
+                  </Link>
+                </motion.div>
+
+                <motion.div
+                  initial={{ x: 20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-right"
+                >
+                  <Link 
+                    to="/#lab" 
+                    onClick={() => setIsMobileMenuOpen(false)} 
+                    className="text-3xl font-light text-black hover:text-gray-700 transition-colors tracking-wider relative group"
+                  >
+                    Lab
+                    <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-black transition-all group-hover:w-full"></span>
+                  </Link>
+                </motion.div>
+
+                <motion.div
+                  initial={{ x: 20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.25 }}
+                  className="text-right"
+                >
+                  <Link 
+                    to="/#fluid-orbit" 
+                    onClick={() => setIsMobileMenuOpen(false)} 
+                    className="text-3xl font-light text-black hover:text-gray-700 transition-colors tracking-wider relative group"
+                  >
+                    Fluid Orbit
+                    <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-black transition-all group-hover:w-full"></span>
+                  </Link>
+                </motion.div>
+
+                <motion.div
+                  initial={{ x: 20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-right"
+                >
+                  <Link 
+                    to="/#experiments" 
+                    onClick={() => setIsMobileMenuOpen(false)} 
+                    className="text-3xl font-light text-black hover:text-gray-700 transition-colors tracking-wider relative group"
+                  >
+                    Experiments
+                    <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-black transition-all group-hover:w-full"></span>
+                  </Link>
+                </motion.div>
+
+                {/* Decorative Line */}
+                <motion.div 
+                  className="w-16 h-px bg-black/30 mt-4"
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.4, duration: 0.5 }}
+                />
+
+                {/* Footer Text */}
+                <motion.p 
+                  className="text-xs text-black/50 tracking-widest uppercase mt-2"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  ENUID Labs
+                </motion.p>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Main Content */}
       <div className="relative z-10 pt-24 md:pt-32 pb-12 md:pb-20 px-4 md:px-6 lg:px-20">
@@ -162,9 +281,9 @@ const Blogs = () => {
               Journal!
             </h1>
 
-            <h4 className="text-lg md:text-xl mb-6 md:mb-8 px-6 md:pl-8 lg:pl-16">1. ENUID</h4>
+            <h4 className="text-lg md:text-xl mb-6 md:mb-8 pl-4 md:pl-8 lg:pl-16">1. ENUID</h4>
 
-            <div className="space-y-6 md:space-y-8 pb-12 md:pb-16 px-6 md:pl-8 md:pr-12 lg:pl-16 lg:pr-40">
+            <div className="space-y-6 md:space-y-8 pb-12 md:pb-16 pl-4 pr-4 md:pl-8 md:pr-12 lg:pl-16 lg:pr-40">
               <p className="text-xs md:text-sm text-black/80 leading-relaxed">
                 ENUID is a lab, a focused and independent space where intelligence is studied, questioned, built, broken, and rebuilt until it's actually useful. The mission is not to impress the world. It is to change what's possible. We believe the next generation of intelligence should not be built by accident. Instead intelligence should be built by intention, deliberately and with care. ENUID is a lab for intelligence that works rather than merely performs. Our aim is intelligence that thinks, adapts, and respects the humans using it.
               </p>
@@ -188,9 +307,9 @@ const Blogs = () => {
                     Dated: 3/December/2025
               </p>
 
-            <h4 className="text-lg md:text-xl mb-6 md:mb-8 px-6 md:pl-8 lg:pl-16 pt-24 md:pt-6">2. FLUID ORBIT</h4>
+            <h4 className="text-lg md:text-xl mb-6 md:mb-8 pl-4 md:pl-8 lg:pl-16 pt-24 md:pt-6">2. FLUID ORBIT</h4>
 
-            <div className="space-y-6 md:space-y-6 pb-8 md:pb-10 px-6 md:pl-8 md:pr-12 lg:pl-16 lg:pr-40">
+            <div className="space-y-2 md:space-y-6 pb-8 md:pb-10 pl-4 pr-4 md:pl-8 md:pr-12 lg:pl-16 lg:pr-40">
               <p className="text-xs md:text-sm text-black/80 leading-relaxed">
                 Today's e-commerce is fragmented. Huge marketplaces dominate. Small shops, niche retailers, and specialty stores are scattered across the web. For a customer, finding the right product often means jumping across dozens of marketplaces, wading through pages of mediocre recommendations, and sorting through inconsistent reviews and data.
               </p>

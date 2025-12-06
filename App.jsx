@@ -68,22 +68,35 @@ const WishlistModal = ({ isOpen, onClose, onEmailAdded, initialEmail = '' }) => 
       return;
     }
 
-    // Show success and close immediately
-    setIsSubmitted(true);
-    onEmailAdded();
-    onClose();
-    setEmail('');
+    setIsLoading(true);
 
-    // Save to server in background (fire and forget)
     try {
       const apiUrl = import.meta.env.PROD ? '/api/save-email' : 'http://localhost:3001/api/save-email';
-      fetch(apiUrl, {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, timestamp: new Date().toISOString() })
+        body: JSON.stringify({ email: email.toLowerCase().trim(), timestamp: new Date().toISOString() })
       });
+
+      const data = await response.json();
+
+      if (data.message === 'Email already registered') {
+        setError('This email is already on the waitlist');
+        setIsLoading(false);
+        return;
+      }
+
+      // Only show success if email was actually saved
+      setIsSubmitted(true);
+      onEmailAdded();
+      setTimeout(() => {
+        onClose();
+        setEmail('');
+      }, 1500);
     } catch (err) {
       console.error('Error saving email:', err);
+      setError('Failed to save email. Please try again.');
+      setIsLoading(false);
     }
   };
 
@@ -651,28 +664,46 @@ const EnuidLab = () => {
                   <form onSubmit={async (e) => {
                     e.preventDefault();
                     
-                    // Show success immediately
-                    setSubmitMessage('Wishlist Joined');
-                    setHasJoined(true);
-                    setEmailCount(prev => prev + 1);
+                    if (!mainEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mainEmail)) {
+                      setSubmitMessage('Please enter a valid email address');
+                      return;
+                    }
 
-                    // Reset after 1 second
-                    setTimeout(() => {
-                      setHasJoined(false);
-                      setSubmitMessage('');
-                      setMainEmail('');
-                    }, 1000);
+                    setIsSubmitting(true);
+                    setSubmitMessage('');
 
-                    // Save to server in background (fire and forget)
                     try {
                       const apiUrl = import.meta.env.PROD ? '/api/save-email' : 'http://localhost:3001/api/save-email';
-                      fetch(apiUrl, {
+                      const response = await fetch(apiUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email: mainEmail, timestamp: new Date().toISOString() })
+                        body: JSON.stringify({ email: mainEmail.toLowerCase().trim(), timestamp: new Date().toISOString() })
                       });
+
+                      const data = await response.json();
+
+                      if (data.message === 'Email already registered') {
+                        setSubmitMessage('This email is already on the waitlist');
+                        setIsSubmitting(false);
+                        return;
+                      }
+
+                      // Only show success if email was actually saved
+                      setSubmitMessage('Wishlist Joined');
+                      setHasJoined(true);
+                      setEmailCount(prev => prev + 1);
+
+                      // Reset after 2 seconds
+                      setTimeout(() => {
+                        setHasJoined(false);
+                        setSubmitMessage('');
+                        setMainEmail('');
+                        setIsSubmitting(false);
+                      }, 2000);
                     } catch (err) {
                       console.error('Error saving email:', err);
+                      setSubmitMessage('Failed to connect. Please try again.');
+                      setIsSubmitting(false);
                     }
                   }} className="flex flex-col sm:flex-row gap-3 md:gap-4">
                     <input
