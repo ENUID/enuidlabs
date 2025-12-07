@@ -281,7 +281,6 @@ const Blogs = () => {
               Journal!
             </h1>
 
-<<<<<<< HEAD
             <h4 className="text-lg md:text-xl mb-6 md:mb-8 pl-4 md:pl-8 lg:pl-16">1. ENUID</h4>
 
             <div className="space-y-6 md:space-y-8 pb-12 md:pb-16 pl-4 pr-4 md:pl-8 md:pr-12 lg:pl-16 lg:pr-40">
