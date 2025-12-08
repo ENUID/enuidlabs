@@ -374,7 +374,7 @@ const EnuidLab = () => {
           <a href="#lab" className="transition-colors text-black/100 hover:text-black/60">Lab</a>
           <a href="#fluid-orbit" className="transition-colors text-black/100 hover:text-black/60">Fluid Orbit</a>
           <a href="#experiments" className="transition-colors text-black/100 hover:text-black/60">Experiments</a>
-          <Link to="/blogs" className="transition-colors text-black/100 hover:text-black/60">Journals</Link>
+          <Link to="/blogs" className="transition-colors text-black/100 hover:text-black/60">Journal</Link>
         </div>
       </nav>
 
