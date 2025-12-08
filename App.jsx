@@ -362,19 +362,19 @@ const EnuidLab = () => {
       {/* Mobile Menu Button - Only visible on mobile */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="md:hidden absolute top-6 right-4 z-50 p-2.5 rounded-lg bg-white/100 backdrop-blur-sm border border-white/60 hover:bg-white/90 transition-all"
+        className="md:hidden fixed top-6 right-4 z-[9999] p-2.5 rounded-full bg-black backdrop-blur-sm border border-white hover:bg-gray-900 transition-all"
         aria-label="Toggle menu"
       >
-        {isMobileMenuOpen ? <X className="w-5 h-5 text-black" /> : <Menu className="w-5 h-5 text-black" />}
+        {isMobileMenuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
       </button>
 
       {/* Desktop Navigation - Only visible on desktop */}
-      <nav className="hidden md:block absolute top-6 md:top-8 right-4 md:right-8 z-50 px-4 md:px-6 lg:px-8 py-2 md:py-3 rounded-lg bg-white/100 backdrop-blur-sm border border-white/60">
+      <nav className="hidden md:block fixed top-6 md:top-8 right-4 md:right-8 z-[9999] px-4 md:px-6 lg:px-8 py-2 md:py-3 rounded-lg bg-white/100 backdrop-blur-sm border border-white/60">
         <div className="flex gap-3 md:gap-6 lg:gap-8 text-[10px] md:text-xs font-light tracking-wide uppercase">
           <a href="#lab" className="transition-colors text-black/100 hover:text-black/60">Lab</a>
-          <a href="#fluid-orbit" className="transition-colors text-black/100 hover:text-black/60">neOrbit</a>
+          <a href="#fluid-orbit" className="transition-colors text-black/100 hover:text-black/60">Fluid Orbit</a>
           <a href="#experiments" className="transition-colors text-black/100 hover:text-black/60">Experiments</a>
-          <Link to="/blogs" className="transition-colors text-black/100 hover:text-black/60">Journal</Link>
+          <Link to="/blogs" className="transition-colors text-black/100 hover:text-black/60">Journals</Link>
         </div>
       </nav>
 
@@ -400,37 +400,34 @@ const EnuidLab = () => {
                 <motion.a 
                   href="#lab" 
                   onClick={() => setIsMobileMenuOpen(false)} 
-                  className="text-2xl font-light text-white hover:text-gray-300 transition-colors tracking-wide relative group text-right uppercase"
+                  className="text-2xl font-light text-white hover:text-gray-300 transition-colors tracking-wide text-right uppercase"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.15 }}
                 >
                   Lab
-                  <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-white transition-all group-hover:w-full"></span>
                 </motion.a>
 
                 <motion.a 
                   href="#fluid-orbit" 
                   onClick={() => setIsMobileMenuOpen(false)} 
-                  className="text-2xl font-light text-white hover:text-gray-300 transition-colors tracking-wide relative group text-right uppercase"
+                  className="text-2xl font-light text-white hover:text-gray-300 transition-colors tracking-wide text-right uppercase"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.2 }}
                 >
                   Fluid Orbit
-                  <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-white transition-all group-hover:w-full"></span>
                 </motion.a>
 
                 <motion.a 
                   href="#experiments" 
                   onClick={() => setIsMobileMenuOpen(false)} 
-                  className="text-2xl font-light text-white hover:text-gray-300 transition-colors tracking-wide relative group text-right uppercase"
+                  className="text-2xl font-light text-white hover:text-gray-300 transition-colors tracking-wide text-right uppercase"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.25 }}
                 >
                   Experiments
-                  <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-white transition-all group-hover:w-full"></span>
                 </motion.a>
 
                 <motion.div
@@ -442,10 +439,9 @@ const EnuidLab = () => {
                   <Link 
                     to="/blogs" 
                     onClick={() => setIsMobileMenuOpen(false)} 
-                    className="text-2xl font-light text-white hover:text-gray-300 transition-colors tracking-wide relative group uppercase"
+                    className="text-2xl font-light text-white hover:text-gray-300 transition-colors tracking-wide uppercase"
                   >
                     Journal
-                    <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-white transition-all group-hover:w-full"></span>
                   </Link>
                 </motion.div>
 
@@ -488,7 +484,7 @@ const EnuidLab = () => {
                 <div className="flex items-center gap-4 mb-4 md:mb-6">
                  
                   <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-tight text-white leading-tight" style={{ fontWeight: 400 }}>
-                    Everything starts<br/>with an understanding.
+                    Everything Starts<br/>With Understanding.
                   </h1>
                 </div>
                 

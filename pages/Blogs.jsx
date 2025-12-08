@@ -130,23 +130,13 @@ const Blogs = () => {
     <div className="relative min-h-screen bg-white md:bg-black text-black md:text-white font-sans overflow-x-hidden">
       <Logo />
 
-      {/* Mobile Home Button - Only visible on mobile */}
+      {/* Home Button - Visible on all screen sizes */}
       <Link
         to="/"
-        className="md:hidden absolute top-6 right-4 z-50 px-4 py-3 rounded-lg bg-white backdrop-blur-md border border-black/20 hover:bg-gray-100 transition-all shadow-md text-xs font-light tracking-wide uppercase text-black"
+        className="fixed top-6 right-4 md:right-8 z-[9999] px-4 md:px-6 py-3 rounded-lg bg-white md:bg-black backdrop-blur-md border border-black/20 md:border-white/20 hover:bg-gray-100 md:hover:bg-gray-900 transition-all shadow-md text-xs font-light tracking-wide uppercase text-black md:text-white"
       >
         Home
       </Link>
-
-      {/* Desktop Navigation - Only visible on desktop */}
-      <nav className="hidden md:block absolute top-6 md:top-8 right-4 md:right-8 z-50 px-4 md:px-6 lg:px-8 py-2 md:py-3 rounded-lg bg-black backdrop-blur-xl border border-black/20 shadow-lg">
-        <div className="flex gap-3 md:gap-6 lg:gap-8 text-[10px] md:text-xs font-light tracking-wide uppercase justify-end">
-          <Link to="/" className="transition-colors text-white/90 hover:text-white/70">Home</Link>
-          <Link to="/#lab" className="transition-colors text-white/90 hover:text-white/70">Lab</Link>
-          <Link to="/#fluid-orbit" className="transition-colors text-white/90 hover:text-white/70">Fluid Orbit</Link>
-          <Link to="/#experiments" className="transition-colors text-white/90 hover:text-white/70">Experiments</Link>
-        </div>
-      </nav>
 
 
 
