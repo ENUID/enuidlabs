@@ -337,8 +337,20 @@ const EnuidLab = () => {
     fetchEmailCount();
   }, []);
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
+
   return (
-    <div className="relative min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white overflow-x-hidden">
+    <div className="relative min-h-screen bg-black text-black font-sans selection:bg-black selection:text-white overflow-x-hidden">
       
       {/* Black Background */}
       <div 
@@ -350,17 +362,17 @@ const EnuidLab = () => {
       {/* Mobile Menu Button - Only visible on mobile */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="md:hidden absolute top-6 right-4 z-50 p-2.5 rounded-full bg-black/90 backdrop-blur-md border border-white/20 hover:bg-black transition-all"
+        className="md:hidden absolute top-6 right-4 z-50 p-2.5 rounded-lg bg-white/100 backdrop-blur-sm border border-white/60 hover:bg-white/90 transition-all"
         aria-label="Toggle menu"
       >
-        {isMobileMenuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
+        {isMobileMenuOpen ? <X className="w-5 h-5 text-black" /> : <Menu className="w-5 h-5 text-black" />}
       </button>
 
       {/* Desktop Navigation - Only visible on desktop */}
       <nav className="hidden md:block absolute top-6 md:top-8 right-4 md:right-8 z-50 px-4 md:px-6 lg:px-8 py-2 md:py-3 rounded-lg bg-white/100 backdrop-blur-sm border border-white/60">
         <div className="flex gap-3 md:gap-6 lg:gap-8 text-[10px] md:text-xs font-light tracking-wide uppercase">
           <a href="#lab" className="transition-colors text-black/100 hover:text-black/60">Lab</a>
-          <a href="#fluid-orbit" className="transition-colors text-black/100 hover:text-black/60">Fluid Orbit</a>
+          <a href="#fluid-orbit" className="transition-colors text-black/100 hover:text-black/60">neOrbit</a>
           <a href="#experiments" className="transition-colors text-black/100 hover:text-black/60">Experiments</a>
           <Link to="/blogs" className="transition-colors text-black/100 hover:text-black/60">Journal</Link>
         </div>
@@ -374,19 +386,10 @@ const EnuidLab = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden fixed inset-0 bg-black z-40"
+            className="md:hidden fixed inset-0 bg-white z-40 overflow-hidden"
           >
-            {/* Close Button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="absolute top-6 right-4 z-50 p-2.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all"
-              aria-label="Close menu"
-            >
-              <X className="w-5 h-5 text-white" />
-            </button>
-
             {/* Menu Content */}
-            <div className="flex flex-col items-end justify-center h-full px-8 pr-6">
+            <div className="flex flex-col items-end bg-black text-white justify-center h-full px-8 pr-6 overflow-hidden">
               <motion.div 
                 className="flex flex-col items-end gap-8 w-full"
                 initial={{ y: 20, opacity: 0 }}
@@ -397,9 +400,9 @@ const EnuidLab = () => {
                 <motion.a 
                   href="#lab" 
                   onClick={() => setIsMobileMenuOpen(false)} 
-                  className="text-3xl font-light text-white hover:text-gray-300 transition-colors tracking-wider relative group text-right"
-                  initial={{ x: 20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
+                  className="text-2xl font-light text-white hover:text-gray-300 transition-colors tracking-wide relative group text-right uppercase"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.15 }}
                 >
                   Lab
@@ -409,9 +412,9 @@ const EnuidLab = () => {
                 <motion.a 
                   href="#fluid-orbit" 
                   onClick={() => setIsMobileMenuOpen(false)} 
-                  className="text-3xl font-light text-white hover:text-gray-300 transition-colors tracking-wider relative group text-right"
-                  initial={{ x: 20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
+                  className="text-2xl font-light text-white hover:text-gray-300 transition-colors tracking-wide relative group text-right uppercase"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.2 }}
                 >
                   Fluid Orbit
@@ -421,9 +424,9 @@ const EnuidLab = () => {
                 <motion.a 
                   href="#experiments" 
                   onClick={() => setIsMobileMenuOpen(false)} 
-                  className="text-3xl font-light text-white hover:text-gray-300 transition-colors tracking-wider relative group text-right"
-                  initial={{ x: 20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
+                  className="text-2xl font-light text-white hover:text-gray-300 transition-colors tracking-wide relative group text-right uppercase"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.25 }}
                 >
                   Experiments
@@ -431,15 +434,15 @@ const EnuidLab = () => {
                 </motion.a>
 
                 <motion.div
-                  initial={{ x: 20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.3 }}
                   className="text-right"
                 >
                   <Link 
                     to="/blogs" 
                     onClick={() => setIsMobileMenuOpen(false)} 
-                    className="text-3xl font-light text-white hover:text-gray-300 transition-colors tracking-wider relative group"
+                    className="text-2xl font-light text-white hover:text-gray-300 transition-colors tracking-wide relative group uppercase"
                   >
                     Journal
                     <span className="absolute -bottom-1 right-0 w-0 h-0.5 bg-white transition-all group-hover:w-full"></span>
@@ -448,7 +451,7 @@ const EnuidLab = () => {
 
                 {/* Decorative Line */}
                 <motion.div 
-                  className="w-16 h-px bg-white/30 mt-4"
+                  className="w-16 h-px bg-gray-200 mt-4"
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
                   transition={{ delay: 0.4, duration: 0.5 }}
@@ -456,7 +459,7 @@ const EnuidLab = () => {
 
                 {/* Footer Text */}
                 <motion.p 
-                  className="text-xs text-white/50 tracking-widest uppercase mt-2"
+                  className="text-xs text-gray-400 tracking-widest uppercase mt-2"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5 }}
@@ -468,6 +471,8 @@ const EnuidLab = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+
     
       {/* 1. Hero / Concept Section */}
       <section className="relative min-h-screen w-full overflow-hidden pt-24 md:pt-32 pb-10 flex flex-col z-10">
